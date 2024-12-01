@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
+    <title>تطبيقي</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <style>
-      
         body, html {
             margin: 0;
             padding: 0;
@@ -13,7 +15,6 @@
             width: 100%;
             overflow: hidden; 
         }
-        
         
         .loading-container {
             display: flex;
@@ -51,16 +52,40 @@
 <body>
     <div class="loading-container">
         <div>
-            <h1>Loading...</h1>
+            <h1>جاري التحميل...</h1>
             <div class="spinner"></div>
         </div>
     </div>
 
     <script>
-       
-        setTimeout(function() {
-            window.location.href = 'home.html'; 
-        }, 5000);
+        // تهيئة Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtDVKsKSqIZ2QGZV_5soYwmJhFyw_lgUo",
+            authDomain: "app-dashboard55.firebaseapp.com",
+            databaseURL: "https://app-dashboard55-default-rtdb.firebaseio.com",
+            projectId: "app-dashboard55"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // تسجيل زيارة جديدة
+        async function recordVisit() {
+            const db = firebase.database();
+            const now = new Date().toISOString();
+            const visitRef = db.ref('visits').push();
+            
+            await visitRef.set({
+                timestamp: now,
+                userAgent: navigator.userAgent
+            });
+        }
+
+        // تسجيل الزيارة وتوجيه المستخدم
+        recordVisit().then(() => {
+            window.location.href = 'home.html';
+        }).catch(error => {
+            console.error('Error recording visit:', error);
+            window.location.href = 'home.html';
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="material/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #333030;
+            border: 1px solid #000000;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card {
+            background-color: #333030;
+            border: 1px solid #000000;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-control {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .table {
+            width: 100%;
+            color: #fff;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #444;
+        }
+
+        .table th {
+            background-color: #1a1a1a;
+        }
+
+        h2, h3, h5 {
+            color: #fff;
+        }
+
+        .card-header {
+            border-bottom: 1px solid #444;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        i {
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- قسم تسجيل الدخول -->
+    <div id="loginSection" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <h3 class="text-center mb-4">تسجيل الدخول للوحة التحكم</h3>
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">دخول</button>
+                        <button type="button" id="createAdminBtn" class="btn btn-success w-100">إنشاء حساب المشرف</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم -->
+    <div id="dashboardSection" class="container py-4" style="display: none;">
+        <!-- شريط العنوان -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>لوحة التحكم</h1>
+            <button class="btn btn-danger" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                تسجيل خروج
+            </button>
+        </div>
+
+        <!-- الإحصائيات -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h5>
+                        <i class="fas fa-users"></i>
+                        عدد المستخدمين
+                    </h5>
+                    <h2 id="totalUsers">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h5>
+                        <i class="fas fa-coins"></i>
+                        مجموع الكوينز
+                    </h5>
+                    <h2 id="totalCoins">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h5>
+                        <i class="fas fa-user-check"></i>
+                        المستخدمين النشطين
+                    </h5>
+                    <h2 id="activeUsers">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h5>
+                        <i class="fas fa-tasks"></i>
+                        المهام المنجزة
+                    </h5>
+                    <h2 id="completedTasks">0</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- روابط التواصل الاجتماعي -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>
+                    <i class="fas fa-share-alt"></i>
+                    روابط التواصل الاجتماعي
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="socialLinksForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="fab fa-telegram"></i>
+                                تلغرام
+                            </label>
+                            <input type="url" class="form-control" id="telegramLink">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="fab fa-facebook"></i>
+                                فيسبوك
+                            </label>
+                            <input type="url" class="form-control" id="facebookLink">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="fab fa-youtube"></i>
+                                يوتيوب
+                            </label>
+                            <input type="url" class="form-control" id="youtubeLink">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="fab fa-instagram"></i>
+                                انستغرام
+                            </label>
+                            <input type="url" class="form-control" id="instagramLink">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        حفظ الروابط
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- قائمة المستخدمين -->
+        <div class="card">
+            <div class="card-header">
+                <h5>
+                    <i class="fas fa-users"></i>
+                    المستخدمين
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>المعرف</th>
+                                <th>اسم المستخدم</th>
+                                <th>الكوينز</th>
+                                <th>آخر نشاط</th>
+                                <th>المهام المنجزة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- سيتم ملء هذا القسم بالبيانات -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مكتبات JavaScript -->
+    <script src="material/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js" type="module"></script>
+    <script src="js/admin.js" type="module"></script>
+</body>
+</html>
